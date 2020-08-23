@@ -34,7 +34,7 @@ animHTML:"<script>var ws = new WebSocket('ws://localhost:",string[port],"');",
 bmpFromRGB::{[w;h;rgb]
 	ws:4 xbar 3+w*3;b4:{4#reverse 0x0 vs x};
 	header:0x424d,b4[54+s:ws*h],0x000000003600000028000000,b4[w],b4[h],0x0100180000000000,b4[ws*h],0x130b0000130b00000000000000000000;
-	header,raze ws#/:(raze')w cut flip"x"$floor rgb
+	header,raze ws#/:(raze')w cut flip"x"$floor reverse rgb
  }
 
 frame:0
@@ -61,7 +61,7 @@ sdf:{
  }
 
 //colors
-colors:{255.999*1&(9 5 2f + sin x)%\:len x}
+colors:{255.999*1&(2 5 9f + sin x)%\:len x}
 
 //iteration steps
 steps:25
