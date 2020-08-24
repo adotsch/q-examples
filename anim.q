@@ -2,7 +2,11 @@
 //   https://twitter.com/notargs/status/1250468645030858753
 //Inspiration: 
 //   http://beyondloom.com/tools/specialk.html
+//
+// Run:
+// q -s <threads> anim.q
 
+//You can try increase the resolution if you have stong CPU
 SIZEX:160
 SIZEY:120
 
@@ -51,7 +55,7 @@ frame:0
 len:{sqrt sum x*x}
 
 //ray directions
-dir::(.5-flip raze[(til SIZEX),\:/:(til SIZEY)]%SIZEY),.5
+dir::2 flip/(.5-flip raze[(til SIZEX),\:/:(til SIZEY)]%SIZEY),.5
 
 //the object defined as a signed distance function
 sdf:{
@@ -66,8 +70,17 @@ colors:{255.999*1&(2 5 9f + sin x)%\:len x}
 //iteration steps
 steps:25
 
+//parallelized f with split (input) and merge (output) functions. 
+.Q.fsm:{[s;m;f;x]m f peach s[1|system"s"]x}
+
+//split input
+split:{[n;x]flip(n;0N)#/:x}
+//merge resuts
+merge:,'/
+
 //everything put together
 img:{
 	//marching towards the object and colors
-	colors steps {x+dir*\:sdf x}/0 0 0f
+	//colors steps {x+dir*\:sdf x}/0 0 0f
+	.Q.fsm[split;merge;{[d]colors steps {[d;x]x+d*\:sdf x}[d]/0 0 0f};dir]
  } 
